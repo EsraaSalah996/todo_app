@@ -21,9 +21,9 @@ Users can create tasks, organize them with colors, track their status, and manag
 ---
 
 #  Screens
- Profile | Home | Add Task |
+ Splash | Profile | Home | Add Task |
 
-<img width="1920" height="1080" alt="Untitled design" src="https://github.com/user-attachments/assets/7707294e-5f6a-4137-8eef-f6db63eff998" />
+<img width="1920" height="1080" alt="Untitled design" src="https://github.com/user-attachments/assets/d060e4e0-2d75-4f2c-bc59-62c127f2147b" />
 
 
 ---
