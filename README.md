@@ -47,6 +47,7 @@ lib
 │   
 │
 ├── features
+    ├── animated splash
 │   ├── profile
 │   ├── home
 │   └── add_task
