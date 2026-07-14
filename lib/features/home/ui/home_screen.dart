@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:todo_app/core/theme/app_text_style.dart';
+import 'package:todo_app/core/utils/app_constant.dart';
 import 'package:todo_app/features/add_task/ui/add_task_screen.dart';
+import 'package:todo_app/features/auth/data/models/user_model.dart';
 import 'package:todo_app/features/home/ui/widgets/custom_floating_action_button.dart';
 import 'package:todo_app/features/home/ui/widgets/home_header.dart';
 import 'package:todo_app/features/home/ui/widgets/static_card.dart';
@@ -11,6 +14,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // var userData = Hive.box<UserModel>(AppConstant.userBox).getAt(0);
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
 

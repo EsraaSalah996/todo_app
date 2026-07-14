@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/core/theme/app_text_style.dart';
+import 'package:todo_app/core/utils/app_constant.dart';
 import 'package:todo_app/core/widgets/app_button.dart';
 import 'package:todo_app/core/widgets/custom_text_feild.dart';
+import 'package:todo_app/features/auth/data/models/user_model.dart';
 import 'package:todo_app/features/home/ui/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -28,72 +31,119 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {});
   }
 
+  var formKey = GlobalKey<FormState>();
+  var nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 200),
-              InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Choose"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                pickFromCamera();
-                              },
-                              icon: Icon(Icons.camera),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                pickFromGallery();
-                              },
-                              icon: Icon(Icons.browse_gallery),
-                            ),
-                          ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 200),
+                InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Choose"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  pickFromCamera();
+                                },
+                                icon: Icon(Icons.camera),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  pickFromGallery();
+                                },
+                                icon: Icon(Icons.browse_gallery),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey.shade300,
+                    backgroundImage: image != null
+                        ? Image.file(File(image?.path ?? "")).image
+                        : null,
+                    child: image != null ? null : Icon(Icons.person, size: 50),
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text("Create your profile", style: AppTextStyle.headlineStyle),
+                SizedBox(height: 12),
+                Text(
+                  "Add your name and picture",
+                  style: AppTextStyle.hintStyle,
+                ),
+                SizedBox(height: 30),
+                CustomTextFeild(controller: nameController),
+                SizedBox(height: 30),
+                AppButton(
+                  title: "Continue",
+                  onTap: () {
+                    if (image == null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Error"),
+                          content: Text("Image is required"),
                         ),
                       );
-                    },
-                  );
-                },
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey.shade300,
-                  backgroundImage: image != null
-                      ? Image.file(File(image?.path ?? "")).image
-                      : null,
-                  child: image != null ? null : Icon(Icons.person, size: 50),
+                      return;
+                    }
+                    if (formKey.currentState?.validate() ?? false) {
+                      Hive.box<UserModel>(AppConstant.userBox)
+                          .add(
+                            UserModel(
+                              image: image?.path ?? "",
+                              name: nameController.text,
+                            ),
+                          )
+                          .then((value) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          })
+                          .catchError((error) {
+                            print(error);
+                          });
+                    }
+
+                    Hive.box<UserModel>(AppConstant.userBox).add(
+                      UserModel(
+                        image: image?.path ?? "",
+                        name: nameController.text,
+                      ),
+                    );
+                    /* Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    ); */
+                  },
                 ),
-              ),
-              SizedBox(height: 30),
-              Text("Create your profile", style: AppTextStyle.headlineStyle),
-              SizedBox(height: 12),
-              Text("Add your name and picture", style: AppTextStyle.hintStyle),
-              SizedBox(height: 30),
-              CustomTextFeild(),
-              SizedBox(height: 30),
-              AppButton(
-                title: "Continue",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
