@@ -1,40 +1,42 @@
 import 'package:flutter/material.dart';
 
 class ColorPicker extends StatelessWidget {
-  const ColorPicker({super.key});
+  final List<Color> colors;
+  final int selectedIndex;
+  final Function(int) onColorSelected;
+  const ColorPicker({
+    super.key,
+    required this.colors,
+    required this.selectedIndex,
+    required this.onColorSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    const colors = [
-      Color(0xff2196F3),
-      Color(0xff4CAF50),
-      Color(0xffFF9800),
-      Color(0xff9C27B0),
-      Color(0xffF44336),
-      Color(0xff009688),
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           "Choose Color",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            colors.length,
-            (index) => Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: colors[index],
-                shape: BoxShape.circle,
+          children: List.generate(colors.length, (index) {
+            return GestureDetector(
+              onTap: () => onColorSelected(index),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: colors[index],
+                  child: selectedIndex == index
+                      ? const Icon(Icons.check, color: Colors.white, size: 24)
+                      : null,
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         ),
       ],
     );

@@ -4,12 +4,16 @@ class TaskTextFeild extends StatelessWidget {
   final String title;
   final String hint;
   final int maxLines;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
 
   const TaskTextFeild({
     super.key,
     required this.title,
     required this.hint,
     this.maxLines = 1,
+    required this.controller,
+    this.validator,
   });
 
   @override
@@ -22,8 +26,10 @@ class TaskTextFeild extends StatelessWidget {
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 10),
-        TextField(
+        TextFormField(
           maxLines: maxLines,
+          validator: validator,
+          controller: controller,
           decoration: InputDecoration(
             hintText: hint,
             filled: true,

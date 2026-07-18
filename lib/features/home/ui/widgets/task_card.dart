@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/core/theme/app_text_style.dart';
 
 class TaskCard extends StatelessWidget {
   final Color color;
@@ -7,6 +6,7 @@ class TaskCard extends StatelessWidget {
   final String subtitle;
   final String status;
   final Color statusColor;
+  final VoidCallback onDelete;
 
   const TaskCard({
     super.key,
@@ -15,6 +15,7 @@ class TaskCard extends StatelessWidget {
     required this.subtitle,
     required this.status,
     required this.statusColor,
+    required this.onDelete,
   });
 
   @override
@@ -52,21 +53,30 @@ class TaskCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-
           const SizedBox(width: 18),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: AppTextStyle.bodyLargeStyle),
-
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 6),
-
-                Text(subtitle, style: AppTextStyle.hintStyle),
-
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 14),
-
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -81,14 +91,35 @@ class TaskCard extends StatelessWidget {
                     style: TextStyle(
                       color: statusColor,
                       fontWeight: FontWeight.bold,
+                      fontSize: 12,
                     ),
                   ),
                 ),
               ],
             ),
           ),
-
-          const Icon(Icons.arrow_forward_ios, size: 22),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0, right: 8.0),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 20,
+                  color: Colors.grey,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: Colors.redAccent,
+                  size: 28,
+                ),
+                onPressed: onDelete,
+              ),
+            ],
+          ),
         ],
       ),
     );

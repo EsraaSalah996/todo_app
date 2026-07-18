@@ -1,35 +1,45 @@
 import 'package:flutter/material.dart';
 
-class CustomDropdown extends StatelessWidget {
-  const CustomDropdown({super.key});
+class CustomDropdownField extends StatelessWidget {
+  final String label;
+  final String currentValue;
+  final List<String> options;
+  final void Function(String?) onChanged;
+
+  const CustomDropdownField({
+    super.key,
+    required this.label,
+    required this.currentValue,
+    required this.options,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Status",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<String>(
+          value: currentValue,
+          icon: const Icon(Icons.arrow_drop_down),
+          decoration: InputDecoration(
+            fillColor: Colors.white,
+            filled: true,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none,
+            ),
           ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Pending",
-                style: TextStyle(fontSize: 16, color: Colors.black),
-              ),
-              Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
-            ],
-          ),
+          items: options.map((e) {
+            return DropdownMenuItem<String>(value: e, child: Text(e));
+          }).toList(),
+          onChanged: onChanged,
         ),
       ],
     );
